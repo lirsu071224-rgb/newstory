@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fragments of a Life</title>
+
+<style>
+body{
+  font-family: Arial;
+  background:#0d0d0d;
+  color:#eee;
+  margin:0;
+  padding:20px;
+}
+
+.container{
+  max-width:800px;
+  margin:auto;
+}
+
+h1{
+  text-align:center;
+}
+
+#text{
+  background:#1a1a1a;
+  padding:25px;
+  border-radius:10px;
+  margin-bottom:20px;
+  line-height:1.6;
+}
+
+.choice{
+  display:block;
+  margin:10px 0;
+  padding:10px;
+  background:#333;
+  border:none;
+  color:white;
+  cursor:pointer;
+  border-radius:5px;
+}
+
+.choice:hover{
+  background:#666;
+}
+
+#comments{
+  margin-top:40px;
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+}
+
+textarea{
+  width:100%;
+  height:60px;
+  margin-top:10px;
+}
+
+#commentList p{
+  margin:5px 0;
+  border-bottom:1px solid #333;
+  padding-bottom:5px;
+}
+
+a{
+  color:#4da6ff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Fragments of a Life</h1>
+<p>Explore the story, make choices, and understand him from different angles.</p>
+
+<div id="text"></div>
+<div id="choices"></div>
+
+<div id="comments">
+<h3>Share Your Experience</h3>
+<p>If you relate to this story, leave a message:</p>
+<textarea id="commentInput"></textarea>
+<button onclick="addComment()">Submit</button>
+<div id="commentList"></div>
+</div>
+
+</div>
+
+<script>
+const story = {
+
+start:{
+  text:`He stands beside the training car in Shanghai, watching a student struggle to park.
+
+Years ago, this place was full. Now it is quieter.
+
+"Things are changing," he says.`,
+  choices:[
+    {text:"Ask about his hometown", next:"hometown"},
+    {text:"Ask about his future", next:"future"}
+  ]
+},
+
+hometown:{
+  text:`He talks about his small city in Henan.
+
+"Back then, people didn't leave easily," he says.
+
+"But now everyone wants to go somewhere bigger."`,
+  choices:[
+    {text:"Ask why he left", next:"leave_reason"},
+    {text:"Ask if he misses home", next:"miss_home"}
+  ]
+},
+
+leave_reason:{
+  text:`"There wasn't much opportunity," he explains.
+"Everyone did similar work. I wanted something different."
+He pauses. "But sometimes I wonder if I really left, or just moved."`,
+  choices:[
+    {text:"Ask about his future", next:"future"}
+  ]
+},
+
+miss_home:{
+  text:`He smiles faintly. "I think about home sometimes, the streets, the old shops.
+But Shanghai is my reality now."`,
+  choices:[
+    {text:"Ask about his future", next:"future"}
+  ]
+},
+
+future:{
+  text:`When asked about the future, he laughs.
+"This job? Maybe it won't exist one day."
+Then quietly: "Maybe I won't stay here either."`,
+  choices:[
+    {text:"Ask about going abroad", next:"abroad"},
+    {text:"Ask about staying in China", next:"stay"}
+  ]
+},
+
+abroad:{
+  text:`His eyes brighten. "I watch videos about other countries.
+People live differently there. It looks exciting."
+He pauses. "But it's not easy for someone like me."`,
+  choices:[
+    {text:"Encourage him", next:"hope"},
+    {text:"Ask what stops him", next:"barrier"}
+  ]
+},
+
+barrier:{
+  text:`"Money, language, education," he lists calmly.
+"But still... I think about it."`,
+  choices:[
+    {text:"Continue", next:"conflict"}
+  ]
+},
+
+hope:{
+  text:`He nods slowly. "Thanks. Hope is what keeps me curious."
+"But actions are harder than thoughts."`,
+  choices:[
+    {text:"Continue", next:"conflict"}
+  ]
+},
+
+stay:{
+  text:`"Shanghai is already far from home," he says.
+"Maybe that's enough."
+Yet his tone suggests he is not fully convinced.`,
+  choices:[
+    {text:"Continue", next:"conflict"}
+  ]
+},
+
+conflict:{
+  text:`Later, the topic shifts to family.
+When you mention modern relationships, his expression changes.
+"I understand young people think differently," he says.
+"But some things..."`,
+  choices:[
+    {text:"Ask what he means", next:"values"}
+  ]
+},
+
+values:{
+  text:`"For example," he says slowly,
+"If my child married someone very different..."
+He hesitates. "I don't know if I could accept it."
+"I try to be open. But it's not easy."`,
+  choices:[
+    {text:"Reflect on his contradictions", next:"ending"}
+  ]
+},
+
+ending:{
+  text:`You leave the training ground.
+He returns to his car.
+He is both moving forward and holding on.
+Maybe that is what life in this city feels like.`,
+  choices:[
+    {text:"Read more about the social context", next:"summary"}
+  ]
+},
+
+summary:{
+  text:`This story reflects a broader social issue: the experience of semi-skilled migrant workers in Shanghai and their struggle with social and economic inequality. 
+
+With the establishment of a globalised economy, internal migration in China has become more complex, and policies regulating employment have often disadvantaged less qualified migrants. Many face urban segregation, limited access to social security, and precarious work conditions, but they develop adaptive strategies, occupational mobility, and entrepreneurial initiatives to survive.
+
+You can read more in the following article: <a href="https://journals.openedition.org/chinaperspectives/456" target="_blank">Migrant labour policies and the production of social inequality in Shanghai</a>.
+
+This project and sharing of the driving instructor's story aims to highlight how individual experiences reflect wider societal patterns of inequality, adaptation, and social integration. From one personal story, we can see larger issues affecting millions of migrants in China today.`,
+  choices:[]
+}
+
+};
+
+let current = "start";
+
+function render(){
+  document.getElementById("text").innerHTML = story[current].text;
+
+  let choicesHTML = "";
+  story[current].choices.forEach(c=>{
+    if(!story[c.next]){
+      console.warn("Missing scene:", c.next);
+      return;
+    }
+    choicesHTML += `<button class="choice" onclick="go('${c.next}')">${c.text}</button>`;
+  });
+
+  document.getElementById("choices").innerHTML = choicesHTML;
+}
+
+function go(next){
+  if(!story[next]){
+    alert("Missing scene: " + next);
+    return;
+  }
+  current = next;
+  render();
+}
+
+function addComment(){
+  let text = document.getElementById("commentInput").value;
+  if(!text) return;
+
+  let comments = JSON.parse(localStorage.getItem("comments") || "[]");
+  comments.push(text);
+  localStorage.setItem("comments", JSON.stringify(comments));
+
+  document.getElementById("commentInput").value = "";
+  loadComments();
+}
+
+function loadComments(){
+  let comments = JSON.parse(localStorage.getItem("comments") || "[]");
+  let html = "";
+  comments.forEach(c=>{
+    html += `<p>- ${c}</p>`;
+  });
+  document.getElementById("commentList").innerHTML = html;
+}
+
+render();
+loadComments();
+
+</script>
+
+</body>
+</html>
