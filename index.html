@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
 <head>
 <title>Fragments of a Life</title>
@@ -93,6 +93,7 @@ a{
 const story = {
 
 start:{
+  image:"https://www.ruichuangqitian.com/zjx_pic/shanghai0007.jpg",
   text:`He stands beside the training car in Shanghai, watching a student struggle to park.
 
 Years ago, this place was full. Now it is quieter.
@@ -105,6 +106,7 @@ Years ago, this place was full. Now it is quieter.
 },
 
 hometown:{
+  image:"https://upload.eeo.com.cn/2024/0801/1722504465122.jpg",
   text:`He talks about his small city in Henan.
 
 "Back then, people didn't leave easily," he says.
@@ -189,6 +191,7 @@ When you mention modern relationships, his expression changes.
 },
 
 values:{
+  image:"https://1158521683.rsc.cdn77.org/wp-content/uploads/2024/03/%E7%88%B6%E6%AF%8D%E6%9C%9F%E6%9C%9B-%E5%AD%90%E5%A5%B3%E6%88%90%E9%95%B7-%E5%BF%83%E7%90%86%E5%AD%B8-%E8%87%AA%E6%88%91%E5%BD%A2%E8%B1%A11.jpg",
   text:`"For example," he says slowly,
 "If my child married someone very different..."
 He hesitates. "I don't know if I could accept it."
@@ -209,6 +212,7 @@ Maybe that is what life in this city feels like.`,
 },
 
 summary:{
+  image:"https://cw1.tw/CW/images/blog/C1488872827950.jpg",
   text:`This story reflects a broader social issue: the experience of semi-skilled migrant workers in Shanghai and their struggle with social and economic inequality. 
 
 With the establishment of a globalised economy, internal migration in China has become more complex, and policies regulating employment have often disadvantaged less qualified migrants. Many face urban segregation, limited access to social security, and precarious work conditions, but they develop adaptive strategies, occupational mobility, and entrepreneurial initiatives to survive.
@@ -224,10 +228,16 @@ This project and sharing of the driving instructor's story aims to highlight how
 let current = "start";
 
 function render(){
-  document.getElementById("text").innerHTML = story[current].text;
+  let scene = story[current];
+
+  let imgHTML = scene.image
+    ? `<img src="${scene.image}">`
+    : "";
+
+  document.getElementById("text").innerHTML = imgHTML + scene.text;
 
   let choicesHTML = "";
-  story[current].choices.forEach(c=>{
+  scene.choices.forEach(c=>{
     if(!story[c.next]){
       console.warn("Missing scene:", c.next);
       return;
